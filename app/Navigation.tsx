@@ -21,7 +21,11 @@ const App: FunctionComponent<{}> = () => {
 // We also define our background color here
 const Navigator: FunctionComponent<{}> = () => {
   const theme = useContext(ThemeContext);
-  // we pass an empty theme to the navigation container because we prefer to use our theme context
+  // make navigation very plain (no header, theme, etc)
+  const screenOptions = {
+    headerShown: false,
+
+  }
   const emptyTheme = {
     dark: false,
     colors: {
@@ -33,10 +37,6 @@ const Navigator: FunctionComponent<{}> = () => {
       notification: "",
     },
   };
-  // setup our header on all screens
-  const defaultOptions = {
-    header: undefined,
-  };
   // setup linking to allow the url path to be used to navigate, as well as the back button
   const config = {
     screens: {
@@ -44,6 +44,7 @@ const Navigator: FunctionComponent<{}> = () => {
     },
   };
   const linking = { config, prefixes: [] };
+  
   return (
     <LinearGradient
       colors={theme.background}
@@ -51,11 +52,10 @@ const Navigator: FunctionComponent<{}> = () => {
       {...theme.linearGradient}
     >
       <NavigationContainer theme={emptyTheme} linking={linking}>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
           <Stack.Screen
             name="Home"
             component={HomeScreen}
-            options={defaultOptions}
           />
         </Stack.Navigator>
       </NavigationContainer>

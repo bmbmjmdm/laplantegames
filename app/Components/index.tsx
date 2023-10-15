@@ -6,3 +6,4 @@ export type { TypewriterProps } from "./Text";
 export { CardFlip } from "./CardFlip";
 export type { CardFlipRef } from "./CardFlip";
 export { FadeInImage } from "./FadeInImage";
+export {Card} from "./Card";
