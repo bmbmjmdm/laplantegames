@@ -5,7 +5,6 @@ import { ThemeContext, ThemeProvider } from "./Theme";
 import { HomeScreen } from "./Screens";
 // @ts-ignore-next-line
 import LinearGradient from "react-native-linear-gradient";
-import { ScreenHeader } from "./Components";
 
 const Stack = createStackNavigator();
 
@@ -36,17 +35,12 @@ const Navigator: FunctionComponent<{}> = () => {
   };
   // setup our header on all screens
   const defaultOptions = {
-    header: ScreenHeader,
+    header: undefined,
   };
   // setup linking to allow the url path to be used to navigate, as well as the back button
   const config = {
     screens: {
       Home: "home",
-      Apps: "apps",
-      NonApps: "nonapps",
-      Work: "work",
-      KKGM: "kkgm",
-      LoreCraft: "lorecraft"
     },
   };
   const linking = { config, prefixes: [] };

@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
 });
 
 // the various theme options available
-type ThemeName = "dark" | "broken";
+type ThemeName = "dark";
 type DimensionNames = "width" | "height";
 
 // the styling options provided by each theme
@@ -63,41 +63,38 @@ export type Theme = {
   subscript: TextStyle;
   buttonText: TextStyle;
   header: TextStyle;
-  navButton: ViewStyle;
-  showcaseDivider: ViewStyle;
-  menu: Object | Object[] | number;
   // these color strings are fed into our linear gradient background. if you want a solid background, just provide 1 color
   background: string[];
   linkBackground: string[];
-  phoneHeight: number;
-  phoneScaleInitial: number;
-  phoneScaleFinal: number;
-  appScaleInitial: number;
-  appCycleTime: number;
   mediumSpace: number;
   mediumSmallSpace: number;
   smallSpace: number;
-  messageHeightHolder: number;
   screenAnimationY: number;
   screenAnimationSpeed: number;
   screenAnimationOutSpeed: number;
   largeSpace: number;
-  showcaseImageLong: number;
-  showcaseImageShort: number;
-  showcaseTextWidth: number;
-  appLinkSize: number;
-  webLinkHeight: number;
-  webLinkWidth: number;
   linearGradient: Object;
-  sideMenuWidth: number;
-  sideMenuSpeed: number;
-  menuSize: number;
-  sideMenuColor: string;
   floatingText: TextStyle;
 };
 
 // various properties that most themes will have in common, mostly things like component sizing/spacing/positioning
-const defaultTheme = (scale: number, smallerDimension: DimensionNames) => ({
+const defaultTheme = (scale: number, smallerDimension: DimensionNames):Theme => ({
+  name: "dark",
+  text: {
+    color: "#FFFFFF",
+  },
+  subscript: {
+    fontSize: clamp(14, 16, 30 * scale),
+    paddingTop: 10,
+    color: "#AAAAAA",
+  },
+  background: ["#000000", "#000000", "#1a1a1a", "#3d3d3d"],
+  linkBackground: ["#ffb0fb", "#19344d"],
+  floatingText: {
+    fontSize: clamp(20, 30, 45 * scale),
+    color: "#FFFFFF",
+    fontWeight: "bold",
+  },
   header: {
     fontSize: clamp(45, 70, 100 * scale),
     fontWeight: "bold" as "bold",
@@ -112,37 +109,18 @@ const defaultTheme = (scale: number, smallerDimension: DimensionNames) => ({
     fontSize: clamp(14, 16, 30 * scale),
     paddingBottom: 2,
   },
-  phoneHeight: clamp(
-    smallerDimension === "height" ? 550 : 750,
-    1232,
-    smallerDimension === "height" ? 1100 * scale : 1300 * scale
-  ),
-  phoneScaleInitial: 1.25,
-  phoneScaleFinal: 0.65,
-  appScaleInitial: 0.5,
-  appCycleTime: 6,
   largeSpace: clamp(50, 100, 150 * scale),
   mediumSpace: clamp(25, 50, 75 * scale),
   mediumSmallSpace: clamp(17, 35, 55 * scale),
   smallSpace: clamp(8, 15, 25 * scale),
-  messageHeightHolder: clamp(50, 100, 150 * scale),
   screenAnimationY: clamp(150, 200, 300 * scale),
   screenAnimationSpeed: 850,
   screenAnimationOutSpeed: 250,
-  showcaseImageLong: clamp(250, 400, 600 * scale),
-  showcaseImageShort: clamp(125, 200, 300 * scale),
-  showcaseTextWidth: clamp(200, 500, 700 * scale),
-  appLinkSize: clamp(40, 70, 100 * scale),
-  webLinkHeight: clamp(30, 50, 75 * scale),
-  webLinkWidth: clamp(60, 100, 150 * scale),
   linearGradient: {
     useAngle: true,
     angle: 135,
     angleCenter: { x: 0.5, y: 0.5 },
   },
-  sideMenuWidth: 235,
-  sideMenuSpeed: 450,
-  menuSize: clamp(35, 50, 100 * scale),
 });
 
 // where our themes are defined
@@ -152,108 +130,7 @@ export const Themes: Record<
   ThemeName,
   (scale: number, smallerDimension: DimensionNames) => Theme
 > = {
-  dark: (scale, smallerDimension) => ({
-    ...defaultTheme(scale, smallerDimension),
-    name: "dark",
-    text: {
-      color: "#FFFFFF",
-    },
-    subscript: {
-      fontSize: clamp(14, 16, 30 * scale),
-      paddingTop: 10,
-      color: "#AAAAAA",
-    },
-    sideMenuColor: "#000000",
-    background: ["#000000", "#000000", "#1a1a1a", "#3d3d3d"],
-    navButton: {
-      backgroundColor: "#DDDDDD",
-      borderRadius: 999,
-      width: clamp(35, 50, 100 * scale),
-      height: clamp(35, 50, 100 * scale),
-      marginLeft: clamp(35, 50, 100 * scale),
-    },
-    menu: white_menu,
-    showcaseDivider: {
-      width: "50%",
-      height: 2,
-      backgroundColor: "#FFFFFF",
-    },
-    linkBackground: ["#ffb0fb", "#19344d"],
-    floatingText: {
-      fontSize: clamp(20, 30, 45 * scale),
-      color: "#FFFFFF",
-      fontWeight: "bold",
-    },
-  }),
-  broken: (scale, smallerDimension) => ({
-    name: "broken",
-    text: {
-      color: "#000000",
-    },
-    sideMenuColor: "#FFFFFF",
-    background: ["#FFFFFF", "#FFFFFF", "#EEEEEE", "#CCCCCC"],
-    navButton: {
-      backgroundColor: "#333333",
-      borderRadius: 0,
-      width: clamp(70, 100, 200 * scale),
-      height: clamp(35, 50, 100 * scale),
-      marginLeft: clamp(0, 0, 0 * scale),
-    },
-    menu: black_menu,
-    showcaseDivider: {
-      width: "100%",
-      height: 600,
-      backgroundColor: "#000000",
-    },
-    linkBackground: ["#84ff0a", "#5a4c5c"],
-    floatingText: {
-      fontSize: clamp(20, 30, 45 * scale),
-      color: "#000000",
-      fontWeight: "bold",
-    },
-    header: {
-      fontSize: clamp(20, 40, 100 * scale),
-      fontWeight: "bold",
-    },
-    body: {
-      fontSize: clamp(15, 30, 50 * scale),
-    },
-    caption: {
-      fontSize: clamp(50, 75, 100 * scale),
-    },
-    subscript: {
-      textDecorationLine: "underline",
-      textDecorationStyle: "dotted",
-      fontSize: 2
-    },
-    buttonText: {
-      fontSize: clamp(7, 8, 15 * scale),
-      paddingBottom: 2,
-    },
-    phoneHeight: clamp(1200, 1600, 2000 * scale),
-    phoneScaleInitial: 1.5,
-    phoneScaleFinal: 0.65,
-    appScaleInitial: 1.5,
-    appCycleTime: 0.5,
-    largeSpace: clamp(150, 400, 500 * scale),
-    mediumSpace: clamp(75, 200, 300 * scale),
-    mediumSmallSpace: clamp(0, 0, 0 * scale),
-    smallSpace: clamp(0, 0, 0 * scale),
-    messageHeightHolder: clamp(50, 100, 150 * scale),
-    screenAnimationY: clamp(-300, -100, -300 * scale),
-    screenAnimationSpeed: 1500,
-    screenAnimationOutSpeed: 1,
-    showcaseImageShort: clamp(250, 400, 600 * scale),
-    showcaseImageLong: clamp(125, 200, 300 * scale),
-    showcaseTextWidth: clamp(150, 350, 500 * scale),
-    appLinkSize: clamp(15, 250, 25 * (1 / scale)),
-    webLinkWidth: clamp(30, 50, 75 * scale),
-    webLinkHeight: clamp(60, 100, 150 * scale),
-    linearGradient: {},
-    sideMenuWidth: 75,
-    sideMenuSpeed: 5000,
-    menuSize: clamp(35, 50, 100 * scale),
-  }),
+  dark: (scale, smallerDimension) => defaultTheme(scale, smallerDimension),
 };
 
 // the theme provider/context used to provide the theme to all components/screens

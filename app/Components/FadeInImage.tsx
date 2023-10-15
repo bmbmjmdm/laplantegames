@@ -1,5 +1,5 @@
-import { Animated, ImageProps, ActivityIndicator, View, ImageStyle } from "react-native";
-import React, { FunctionComponent, useEffect } from "react";
+import { Animated, ImageProps, ActivityIndicator, View } from "react-native";
+import React, { FunctionComponent } from "react";
 
 // A wrapper for the react-native Image component that fades it in when it loads
 // Overwrites opacity style prop
