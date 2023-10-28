@@ -7,3 +7,4 @@ export { CardFlip } from "./CardFlip";
 export type { CardFlipRef } from "./CardFlip";
 export { FadeInImage } from "./FadeInImage";
 export {Card} from "./Card";
+export {PersonSVG, GroupSVG, HareSVG } from "./SVG";

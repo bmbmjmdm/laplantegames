@@ -13,8 +13,10 @@ type FlexProps = {
   row?: boolean;
   wrap?: boolean;
   reverse?: boolean;
+  flex?: number;
 };
 export const Flex: FunctionComponent<FlexProps> = ({
+  flex = undefined,
   full = false,
   fullWidth = false,
   centered = false,
@@ -29,6 +31,7 @@ export const Flex: FunctionComponent<FlexProps> = ({
   return (
     <View
       style={[
+        typeof flex === "number" ? { flex } : {},
         full ? {flex: 1} : {},
         fullWidth ? { width: "100%" } : {},
         centered ? {

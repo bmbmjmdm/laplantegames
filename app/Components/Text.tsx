@@ -17,6 +17,7 @@ type TextProps = {
   onPress?: () => void;
   type?: "header" | "body" | "caption" | "subscript" | "button";
   animated?: boolean;
+  centered?: boolean;
 };
 
 export const StyledText: FunctionComponent<TextProps> = (props) => {
@@ -26,14 +27,17 @@ export const StyledText: FunctionComponent<TextProps> = (props) => {
   // setup style
   const newProps = { ...props };
   const { style = {}, type, animated } = props;
+  const centeredStyle:TextStyle = props.centered ? { textAlign: "center" } : {};
   let typeStyle = {}
+
   // use the given type to lookup that text type style in our theme
   if (type) {
     const fullType = type === "button" ? "buttonText" : type;
     typeStyle = curStyle[fullType]
   }
-  newProps.style = { ...curStyle.text, ...typeStyle, ...style };
-  
+
+  newProps.style = { ...curStyle.text, ...typeStyle, ...centeredStyle, ...style };
+
   if (animated) return <Animated.Text {...newProps} />;
   // @ts-ignore-next-line - it doesn't know how to handle animated styles with the animated prop
   else return <Text {...newProps} />;
@@ -67,6 +71,8 @@ export type TypewriterProps = TextProps & {
   onFinish?: Function;
   // if true, will not animate in the text
   startFull?: boolean;
+  // center horizontally
+  centered?: boolean
 };
 export const Typewriter: FunctionComponent<TypewriterProps> = (props) => {
   const {
@@ -77,6 +83,7 @@ export const Typewriter: FunctionComponent<TypewriterProps> = (props) => {
     startFull = false,
     pauseTime = 1000,
     onFinish = () => {},
+    centered = false,
   } = props;
 
   // text visible on screen

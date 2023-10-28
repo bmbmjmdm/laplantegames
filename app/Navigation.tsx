@@ -43,7 +43,9 @@ const Navigator: FunctionComponent<{}> = () => {
   
   return (
     <LinearGradient
-      colors={["#000000", "#000000", "#1a1a1a", "#3d3d3d"]}
+      //colors={["#000000", "#000000", "#1a1a1a", "#3d3d3d"]}
+      //colors={["#000000", "#000000", "#aaaaaa", "#000000", "#000000"]}
+      colors={["#000000", "#000000", "#000000", "#000000"]}
       style={{ height: "100%", overflow: "hidden" }}
       useAngle={true}
       angle={135}
