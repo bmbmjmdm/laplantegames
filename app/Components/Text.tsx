@@ -1,14 +1,12 @@
-import { Text, TextStyle, Animated } from "react-native";
+import { Text, TextStyle, Animated, StyleSheet } from "react-native";
 import React, {
   FunctionComponent,
-  useContext,
   useState,
   useEffect,
   useRef,
   ReactElement,
   ReactNode,
 } from "react";
-import { ThemeContext } from "../Theme";
 import "react-native-get-random-values";
 import { v4 as uuid } from "uuid";
 
@@ -20,18 +18,21 @@ type TextProps = {
   type?: "header" | "body" | "caption" | "subscript" | "button";
   animated?: boolean;
 };
+
 export const StyledText: FunctionComponent<TextProps> = (props) => {
-  const theme = useContext(ThemeContext);
+  // TODO get the current page name from redux
+  const curStyle = styles.Home
+
   // setup style
   const newProps = { ...props };
   const { style = {}, type, animated } = props;
-  let themeStyle = {}
+  let typeStyle = {}
   // use the given type to lookup that text type style in our theme
   if (type) {
     const fullType = type === "button" ? "buttonText" : type;
-    themeStyle = theme[fullType]
+    typeStyle = curStyle[fullType]
   }
-  newProps.style = { ...theme.text, ...themeStyle, ...style };
+  newProps.style = { ...curStyle.text, ...typeStyle, ...style };
   
   if (animated) return <Animated.Text {...newProps} />;
   // @ts-ignore-next-line - it doesn't know how to handle animated styles with the animated prop
@@ -161,3 +162,30 @@ const parseSubText = (
     ));
   }
 };
+
+const styles = {
+  Home: StyleSheet.create({
+    text: {
+      color: "#FFFFFF",
+    },
+    subscript: {
+      fontSize: 14,
+      paddingTop: 10,
+      color: "#AAAAAA",
+    },
+    header: {
+      fontSize: 45,
+      fontWeight: "bold" as "bold",
+    },
+    body: {
+      fontSize: 30,
+    },
+    caption: {
+      fontSize: 20,
+    },
+    buttonText: {
+      fontSize: 14,
+      paddingBottom: 2,
+    },
+  })
+}

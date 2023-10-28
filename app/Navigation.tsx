@@ -47,9 +47,11 @@ const Navigator: FunctionComponent<{}> = () => {
   
   return (
     <LinearGradient
-      colors={theme.background}
+      colors={["#000000", "#000000", "#1a1a1a", "#3d3d3d"]}
       style={{ height: "100%", overflow: "hidden" }}
-      {...theme.linearGradient}
+      useAngle={true}
+      angle={135}
+      angleCenter={{ x: 0.5, y: 0.5 }}
     >
       <NavigationContainer theme={emptyTheme} linking={linking}>
         <Stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
@@ -62,5 +64,4 @@ const Navigator: FunctionComponent<{}> = () => {
     </LinearGradient>
   );
 };
-
 export default App;

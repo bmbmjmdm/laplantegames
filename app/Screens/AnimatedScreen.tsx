@@ -9,7 +9,6 @@ import React, {
 } from "react";
 import { easeOutBack } from "../Components";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { ThemeContext } from "../Theme";
 
 type AnimatedScreenProps = {
   children: ReactNode;
@@ -23,9 +22,8 @@ export const AnimatedScreen: FunctionComponent<AnimatedScreenProps> = ({
   children,
   fadeOut = false,
 }) => {
-  const theme = useContext(ThemeContext);
   const animatedTop = useRef(
-    new Animated.Value(theme.screenAnimationY)
+    new Animated.Value(150)
   ).current;
   const animatedOpacity = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
@@ -38,7 +36,7 @@ export const AnimatedScreen: FunctionComponent<AnimatedScreenProps> = ({
       // fade out
       Animated.timing(animatedOpacity, {
         toValue: 0,
-        duration: theme.screenAnimationOutSpeed,
+        duration: 250,
         useNativeDriver: false,
       }).start();
     }
@@ -51,14 +49,14 @@ export const AnimatedScreen: FunctionComponent<AnimatedScreenProps> = ({
       Animated.parallel([
         Animated.timing(animatedOpacity, {
           toValue: 1,
-          duration: theme.screenAnimationSpeed,
+          duration: 850,
           useNativeDriver: false,
         }),
         // slide up
         Animated.timing(animatedTop, {
           toValue: 0,
           easing: easeOutBack,
-          duration: theme.screenAnimationSpeed,
+          duration: 850,
           useNativeDriver: false,
         }),
       ]).start();

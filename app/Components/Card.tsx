@@ -11,19 +11,6 @@ type CardProps = {
   typed?: boolean;
 };
 
-const styles = {
-  Home: StyleSheet.create({
-    container: {
-      height: 200,
-      width: 150,
-      borderColor: "#eeeeee",
-      borderWidth: 1,
-      borderRadius: 15,
-      margin: 20,
-    }
-  })
-}
-
 export const Card: FunctionComponent<CardProps> = ({
   name,
   typed = false,
@@ -53,3 +40,18 @@ export const Card: FunctionComponent<CardProps> = ({
     </AnimatedPiece>
   );
 };
+
+
+const styles = {
+  Home: StyleSheet.create({
+    container: {
+      height: 200,
+      width: 150,
+      borderColor: "#eeeeee",
+      borderWidth: 2,
+      borderRadius: 25,
+      margin: 20,
+      padding: 20,
+    }
+  })
+}

@@ -1,6 +1,5 @@
 import { View, ViewStyle } from "react-native";
 import React, { FunctionComponent, ReactNode } from "react";
-import { styles } from "../Theme";
 
 // A component that makes it easy to create layout components, such as full-width, centered, row, etc
 type FlexProps = {
@@ -30,16 +29,23 @@ export const Flex: FunctionComponent<FlexProps> = ({
   return (
     <View
       style={[
-        full ? styles.flex : {},
-        fullWidth ? styles.fullWidth : {},
-        centered ? styles.centered : {},
-        centeredVertical && row ? styles.alignCenter : {},
-        centeredVertical && !row ? styles.justifyCenter : {},
-        slim ? styles.slim : {},
-        row ? styles.row : {},
-        reverse && row ? styles.reverseRow : {},
+        full ? {flex: 1} : {},
+        fullWidth ? { width: "100%" } : {},
+        centered ? {
+          alignItems: "center",
+          justifyContent: "center",
+        } : {},
+        centeredVertical && row ? { alignItems: "center" } : {},
+        centeredVertical && !row ? { justifyContent: "center" } : {},
+        slim ? {
+          width: "100%",
+          maxWidth: 1500,
+          paddingHorizontal: 50,
+        } : {},
+        row ? { flexDirection: "row" } : {},
+        reverse && row ? { flexDirection: "row-reverse" } : {},
         wrap ? { flexWrap: "wrap" } : {},
-        reverse && !row ? styles.reverseColumn : {},
+        reverse && !row ? { flexDirection: "column-reverse" } : {},
         style,
       ]}
     >
@@ -66,3 +72,4 @@ export const Padding: FunctionComponent<PaddingProps> = ({
     />
   );
 };
+
