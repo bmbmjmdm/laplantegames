@@ -24,7 +24,11 @@ export const Card: FunctionComponent<CardProps> = ({
   }
 
   return (
-    <AnimatedPiece animationComplete={() => {}}>
+    <AnimatedPiece
+      animationComplete={() => {}}
+      startingHeight={styles.Home.container.height}
+      startingWidth={styles.Home.container.width}
+    >
       <Flex
         style={curStyle.container}
         centered

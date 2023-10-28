@@ -6,17 +6,22 @@ type AnimatedPieceProps = {
   animationComplete?: () => void;
   overrideWidth?: number;
   overrideHeight?: number;
+  startingHeight?: number;
+  startingWidth?: number;
 };
 
 export const AnimatedPiece: FunctionComponent<AnimatedPieceProps> = (props) => {
-  const animatedOpacity = useRef(new Animated.Value(0)).current;
+  // We can be given a starting height/width to avoid hiding the piece until initial layout.
+  // This is advised if it's known that the piece will be animated in from a fixed size.
+  const givenStartingLayout = Boolean(props.startingWidth && props.startingHeight);
+  const animatedOpacity = useRef(new Animated.Value(givenStartingLayout ? 1 : 0)).current;
   const animatedX = useRef(new Animated.Value(0)).current;
   const animatedY = useRef(new Animated.Value(0)).current;
   const animatedRotate = useRef(new Animated.Value(0)).current;
   const animatedScale = useRef(new Animated.Value(1)).current;
-  const calculatedWidth = useRef(new Animated.Value(0)).current;
-  const calculatedHeight = useRef(new Animated.Value(0)).current;
-  const initialLayoutComplete = useRef(false);
+  const calculatedWidth = useRef(new Animated.Value(props.startingWidth || 0)).current;
+  const calculatedHeight = useRef(new Animated.Value(props.startingHeight || 0)).current;
+  const initialLayoutComplete = useRef(givenStartingLayout);
 
   const discard = () => {
     // make these various animations available to our parent 
