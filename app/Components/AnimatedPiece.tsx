@@ -1,5 +1,5 @@
-import { Animated, ImageProps, ActivityIndicator, View } from "react-native";
-import React, { FunctionComponent, useRef, useEffect } from "react";
+import { Animated, Easing } from "react-native";
+import React, { FunctionComponent, useRef, useEffect, useImperativeHandle, ForwardRefRenderFunction } from "react";
 
 type AnimatedPieceProps = {
   children: React.ReactNode;
@@ -10,7 +10,7 @@ type AnimatedPieceProps = {
   startingWidth?: number;
 };
 
-export const AnimatedPiece: FunctionComponent<AnimatedPieceProps> = (props) => {
+const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, AnimatedPieceProps> = (props, ref) => {
   // We can be given a starting height/width to avoid hiding the piece until initial layout.
   // This is advised if it's known that the piece will be animated in from a fixed size.
   const givenStartingLayout = Boolean(props.startingWidth && props.startingHeight);
@@ -24,12 +24,108 @@ export const AnimatedPiece: FunctionComponent<AnimatedPieceProps> = (props) => {
   const initialLayoutComplete = useRef(givenStartingLayout);
 
   const discard = () => {
-    // make these various animations available to our parent 
   }
+
+  // rotate the piece a little clockwise and counter clockwise rapidly
   const shake = () => {
+    Animated.sequence([
+      Animated.timing(animatedRotate, {
+        toValue: 0.05,
+        duration: 50,
+        useNativeDriver: false,
+      }),
+      Animated.timing(animatedRotate, {
+        toValue: -0.05,
+        duration: 100,
+        useNativeDriver: false,
+      }),
+      Animated.timing(animatedRotate, {
+        toValue: 0.05,
+        duration: 100,
+        useNativeDriver: false,
+      }),
+      Animated.timing(animatedRotate, {
+        toValue: -0.05,
+        duration: 100,
+        useNativeDriver: false,
+      }),
+      Animated.timing(animatedRotate, {
+        toValue: 0.05,
+        duration: 100,
+        useNativeDriver: false,
+      }),
+      Animated.timing(animatedRotate, {
+        toValue: -0.05,
+        duration: 100,
+        useNativeDriver: false,
+      }),
+      Animated.timing(animatedRotate, {
+        toValue: 0.05,
+        duration: 100,
+        useNativeDriver: false,
+      }),
+      Animated.timing(animatedRotate, {
+        toValue: -0.05,
+        duration: 100,
+        useNativeDriver: false,
+      }),
+      Animated.timing(animatedRotate, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: false,
+      }),
+    ]).start()
   }
+
   const drawn = () => {
   }
+
+
+  // drag the piece to a random side slowly, then drag it back
+  const pace = () => {
+    Animated.sequence([
+      Animated.timing(animatedX, {
+        toValue: 100 * (Math.random() > 0.5 ? 1 : -1),
+        duration: 3000,
+        useNativeDriver: false,
+      }),
+      Animated.delay(2000),
+      Animated.timing(animatedX, {
+        toValue: 0,
+        duration: 3000,
+        useNativeDriver: false,
+      }),
+    ]).start()
+  }
+
+  // fling a piece upwards, then drop it back down
+  const jump = () => {
+    Animated.sequence([
+      // go up, decelerating
+      Animated.timing(animatedY, {
+        toValue: -100,
+        duration: 500,
+        easing: Easing.out(Easing.sin),
+        useNativeDriver: false,
+      }),
+      // go down, accelerating
+      Animated.timing(animatedY, {
+        toValue: 0,
+        duration: 750,
+        easing: Easing.bounce,
+        useNativeDriver: false,
+      }),
+    ]).start();
+  }
+
+  // expose all of our animation functions to our parent
+  useImperativeHandle(ref, () => ({
+    discard,
+    shake,
+    drawn,
+    pace,
+    jump,
+  }));
 
 
   return (
@@ -52,8 +148,8 @@ export const AnimatedPiece: FunctionComponent<AnimatedPieceProps> = (props) => {
             { translateX: animatedX },
             { translateY: animatedY },
             { rotate: animatedRotate.interpolate({
-              inputRange: [0, 1],
-              outputRange: ["0deg", "360deg"]
+              inputRange: [-1, 0, 1],
+              outputRange: ["-360deg", "0deg", "360deg"]
             })},
             { scale: animatedScale},
           ],
@@ -77,3 +173,13 @@ export const AnimatedPiece: FunctionComponent<AnimatedPieceProps> = (props) => {
     </Animated.View>
   )
 };
+
+export type AnimatedPieceFunctions = {
+  discard: () => void;
+  shake: () => void;
+  drawn: () => void;
+  pace: () => void;
+  jump: () => void;
+}
+
+export const AnimatedPiece = React.forwardRef<AnimatedPieceFunctions, AnimatedPieceProps>(AnimatedPieceComponent);
