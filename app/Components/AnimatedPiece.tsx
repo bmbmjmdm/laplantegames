@@ -29,46 +29,50 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
   // rotate the piece a little clockwise and counter clockwise rapidly
   const shake = () => {
     Animated.sequence([
+      // tilt one way
       Animated.timing(animatedRotate, {
-        toValue: 0.05,
+        toValue: 0.03,
         duration: 50,
         useNativeDriver: false,
       }),
+      // then the other
       Animated.timing(animatedRotate, {
-        toValue: -0.05,
+        toValue: -0.03,
+        duration: 100,
+        useNativeDriver: false,
+      }),
+      //so on
+      Animated.timing(animatedRotate, {
+        toValue: 0.03,
         duration: 100,
         useNativeDriver: false,
       }),
       Animated.timing(animatedRotate, {
-        toValue: 0.05,
+        toValue: -0.03,
         duration: 100,
         useNativeDriver: false,
       }),
       Animated.timing(animatedRotate, {
-        toValue: -0.05,
+        toValue: 0.03,
         duration: 100,
         useNativeDriver: false,
       }),
       Animated.timing(animatedRotate, {
-        toValue: 0.05,
+        toValue: -0.03,
         duration: 100,
         useNativeDriver: false,
       }),
       Animated.timing(animatedRotate, {
-        toValue: -0.05,
+        toValue: 0.03,
         duration: 100,
         useNativeDriver: false,
       }),
       Animated.timing(animatedRotate, {
-        toValue: 0.05,
+        toValue: -0.03,
         duration: 100,
         useNativeDriver: false,
       }),
-      Animated.timing(animatedRotate, {
-        toValue: -0.05,
-        duration: 100,
-        useNativeDriver: false,
-      }),
+      // return to center
       Animated.timing(animatedRotate, {
         toValue: 0,
         duration: 100,
@@ -80,22 +84,103 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
   const drawn = () => {
   }
 
+  // zoom out quick, suspend, and zoome back in
+  const zoomOutAndBackIn = () => {
+    Animated.sequence([
+      Animated.timing(animatedScale, {
+        // pick a side and slide horizontally slowly
+        toValue: 0.75,
+        duration: 550,
+        easing: Easing.out(Easing.exp),
+        useNativeDriver: false,
+      }),
+      // slide back
+      Animated.timing(animatedScale, {
+        toValue: 1,
+        duration: 550,
+        easing: Easing.exp,
+        useNativeDriver: false,
+      }),
+    ]).start()
+  }
 
   // drag the piece to a random side slowly, then drag it back
   const pace = () => {
     Animated.sequence([
       Animated.timing(animatedX, {
+        // pick a side and slide horizontally slowly
         toValue: 100 * (Math.random() > 0.5 ? 1 : -1),
         duration: 3000,
         useNativeDriver: false,
       }),
       Animated.delay(2000),
+      // slide back
       Animated.timing(animatedX, {
         toValue: 0,
         duration: 3000,
         useNativeDriver: false,
       }),
     ]).start()
+  }
+
+  // fling up, starting to shake half way, then fall down, bouncing back into place (vertically and rotationally) as you land
+  const jumpShake = () => {
+    // parallel shake and jump
+    Animated.parallel([
+      // shake
+      Animated.sequence([
+        // wait to rise a bit before shaking
+        Animated.delay(100),
+        // tilt one way
+        Animated.timing(animatedRotate, {
+          toValue: 0.02,
+          duration: 50,
+          useNativeDriver: false,
+        }),
+        // then the other
+        Animated.timing(animatedRotate, {
+          toValue: -0.02,
+          duration: 100,
+          useNativeDriver: false,
+        }),
+        //so on
+        Animated.timing(animatedRotate, {
+          toValue: 0.02,
+          duration: 100,
+          useNativeDriver: false,
+        }),
+        Animated.timing(animatedRotate, {
+          toValue: -0.02,
+          duration: 100,
+          useNativeDriver: false,
+        }),
+        // delay so we can freeze leaned-back, then tilt to center while bouncing from landing
+        Animated.delay(300),
+        // return to center
+        Animated.timing(animatedRotate, {
+          toValue: 0,
+          duration: 100,
+          useNativeDriver: false,
+        }),
+      ]),
+      // jump
+      Animated.sequence([
+        // go up, decelerating
+        Animated.timing(animatedY, {
+          toValue: -50,
+          duration: 500,
+          easing: Easing.out(Easing.sin),
+          useNativeDriver: false,
+        }),
+        // go down, accelerating
+        Animated.timing(animatedY, {
+          toValue: 0,
+          duration: 750,
+          easing: Easing.bounce,
+          useNativeDriver: false,
+        }),
+      ])
+    ]).start();
   }
 
   // fling a piece upwards, then drop it back down
@@ -118,6 +203,63 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
     ]).start();
   }
 
+  // fall directly downward, then fade in where it originally was
+  const fallOffAndRespawn = () => {
+    Animated.sequence([
+      Animated.parallel([
+        // move downward to off-screen, accelerating
+        Animated.timing(animatedY, {
+          toValue: 2000,
+          duration: 1500,
+          easing: Easing.sin,
+          useNativeDriver: false,
+        }),
+        // at the same time, rotate slightly as if we just fell
+        Animated.timing(animatedRotate, {
+          toValue: 0.05,
+          duration: 1000,
+          useNativeDriver: false,
+        }),
+        // at the same time, move back a little bit to improve the fall look
+        Animated.timing(animatedX, {
+          toValue: -10,
+          duration: 1000,
+          useNativeDriver: false,
+        }),
+      ]),
+      // after the fall (and the piece is off-screen), make it disappear
+      Animated.timing(animatedOpacity, {
+        toValue: 0,
+        duration: 1,
+        useNativeDriver: false,
+      }),
+      // reset the position and rotation of the piece
+      Animated.parallel([
+        Animated.timing(animatedY, {
+          toValue: 0,
+          duration: 1,
+          useNativeDriver: false,
+        }),
+        Animated.timing(animatedX, {
+          toValue: 0,
+          duration: 1,
+          useNativeDriver: false,
+        }),
+        Animated.timing(animatedRotate, {
+          toValue: 0,
+          duration: 1,
+          useNativeDriver: false,
+        })
+      ]),
+      // now that its reset, fade it back in
+      Animated.timing(animatedOpacity, {
+        toValue: 1,
+        duration: 700,
+        useNativeDriver: false,
+      })
+    ]).start();
+  }
+
   // expose all of our animation functions to our parent
   useImperativeHandle(ref, () => ({
     discard,
@@ -125,6 +267,9 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
     drawn,
     pace,
     jump,
+    fallOffAndRespawn,
+    jumpShake,
+    zoomOutAndBackIn,
   }));
 
 
@@ -180,6 +325,9 @@ export type AnimatedPieceFunctions = {
   drawn: () => void;
   pace: () => void;
   jump: () => void;
+  fallOffAndRespawn: () => void;
+  jumpShake: () => void;
+  zoomOutAndBackIn: () => void;
 }
 
 export const AnimatedPiece = React.forwardRef<AnimatedPieceFunctions, AnimatedPieceProps>(AnimatedPieceComponent);

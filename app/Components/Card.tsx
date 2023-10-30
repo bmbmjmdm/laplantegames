@@ -1,11 +1,10 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
-import React, { FunctionComponent, ReactElement, useImperativeHandle, useRef } from "react";
+import React, { FunctionComponent, ReactElement, useEffect, useImperativeHandle, useRef } from "react";
 import { Flex } from "./Layout";
 import { StyledText, Typewriter } from "./Text";
 import { AnimatedPiece, AnimatedPieceFunctions } from "./AnimatedPiece";
 import { Spacer } from "./Spacer";
 import LinearGradient from "react-native-linear-gradient";
-
 
 // A rounded rectangle with various built-in animations, appearances, etc
 // Currently assumes there's up to 3 areas: a large name taking the top 3/5ths, and a smaller bottom containing up to 2 suits/names
@@ -28,7 +27,35 @@ export const Card: FunctionComponent<CardProps> = ({
   botName,
   hasGradient = true,
 }) => {
+  // a reference for the card's animation container, allowing us to call animation functions
   const animationRef = useRef<AnimatedPieceFunctions>(null);
+  const randomAnimationInterval = useRef<ReturnType<typeof setInterval> | null>(null);
+  useEffect(() => {
+    // TODO if we're on the Homepage, each card will use a random animation every 5-15 seconds
+    if (true) {
+      // remember the interval so we can clear it later
+      randomAnimationInterval.current = setInterval(() => {
+        // our animation options
+        const animations = [
+          animationRef.current?.shake,
+          animationRef.current?.pace,
+          animationRef.current?.jump,
+          animationRef.current?.fallOffAndRespawn,
+          animationRef.current?.jumpShake,
+          animationRef.current?.zoomOutAndBackIn,
+        ]
+        // pick one at random and do it
+        animations[Math.floor(Math.random() * animations.length)]?.()
+        // wait 5-15 seconds
+      }, 5000 + Math.random() * 10000)
+    }
+    // clear interval on unmount
+    return () => {
+      if (randomAnimationInterval.current) {
+        clearInterval(randomAnimationInterval.current)
+      }
+    }
+  }, [])
 
   // TODO get the current page name from redux
   const curStyle = { ...styles.Home, ...nonStyles.Home }
@@ -58,18 +85,7 @@ export const Card: FunctionComponent<CardProps> = ({
       startingWidth={styles.Home.container.width}
       ref={animationRef}
     >
-      <TouchableOpacity onPress={() => {
-        const rand = Math.random();
-        if (rand > 0.66) {
-          animationRef.current?.shake();
-        }
-        else if (rand > 0.33) {
-          animationRef.current?.pace();
-        }
-        else {
-          animationRef.current?.jump();
-        }
-      }}>
+      <TouchableOpacity activeOpacity={1} onPress={() => {}}>
         <LinearGradient
           style={curStyle.container}
           colors={gradient}

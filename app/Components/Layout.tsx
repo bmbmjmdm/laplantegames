@@ -9,7 +9,6 @@ type FlexProps = {
   centeredVertical?: boolean;
   style?: ViewStyle;
   children: ReactNode;
-  slim?: boolean;
   row?: boolean;
   wrap?: boolean;
   reverse?: boolean;
@@ -20,7 +19,6 @@ export const Flex: FunctionComponent<FlexProps> = ({
   full = false,
   fullWidth = false,
   centered = false,
-  slim = false,
   centeredVertical = false,
   style = {},
   row = false,
@@ -40,11 +38,6 @@ export const Flex: FunctionComponent<FlexProps> = ({
         } : {},
         centeredVertical && row ? { alignItems: "center" } : {},
         centeredVertical && !row ? { justifyContent: "center" } : {},
-        slim ? {
-          width: "100%",
-          maxWidth: 1500,
-          paddingHorizontal: 50,
-        } : {},
         row ? { flexDirection: "row" } : {},
         reverse && row ? { flexDirection: "row-reverse" } : {},
         wrap ? { flexWrap: "wrap" } : {},
