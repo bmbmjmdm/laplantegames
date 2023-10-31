@@ -13,6 +13,7 @@ type AnimatedPieceProps = {
 const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, AnimatedPieceProps> = (props, ref) => {
   // We can be given a starting height/width to avoid hiding the piece until initial layout.
   // This is advised if it's known that the piece will be animated in from a fixed size.
+  // When you do this, be sure to include padding with the width/height!
   const givenStartingLayout = Boolean(props.startingWidth && props.startingHeight);
   const animatedOpacity = useRef(new Animated.Value(givenStartingLayout ? 1 : 0)).current;
   const animatedX = useRef(new Animated.Value(0)).current;

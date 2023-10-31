@@ -46,8 +46,8 @@ export const Card: FunctionComponent<CardProps> = ({
         ]
         // pick one at random and do it
         animations[Math.floor(Math.random() * animations.length)]?.()
-        // wait 5-15 seconds
-      }, 5000 + Math.random() * 10000)
+        // wait 7.5-15 seconds
+      }, 7500 + Math.random() * 7500)
     }
     // clear interval on unmount
     return () => {
@@ -81,8 +81,8 @@ export const Card: FunctionComponent<CardProps> = ({
   return (
     <AnimatedPiece
       animationComplete={() => {}}
-      startingHeight={styles.Home.container.height}
-      startingWidth={styles.Home.container.width}
+      startingHeight={styles.Home.container.height + styles.Home.container.padding * 2}
+      startingWidth={styles.Home.container.width + styles.Home.container.padding * 2}
       ref={animationRef}
     >
       <TouchableOpacity activeOpacity={1} onPress={() => {}}>

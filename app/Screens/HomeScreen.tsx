@@ -31,25 +31,35 @@ export const HomeScreen: FunctionComponent<StackScreenProps<any>> = ({
     }, [showSolo, showGroup, showFast, showSlow]
   )
 
-  // TODO improve the code health here, probably make a wrapper component for our SVGs
+  // declare SVGs for cards and filters
+  const group = <GroupSVG height={25} width={50} fill={"#ff00ff"} />
+  const fast = <HareSVG height={25} width={25} fill={"#ff0077"} />
+  const solo = <PersonSVG height={25} width={25} fill={"#00ffff"} />
+  const slow = <TurtleSVG height={25} width={25} fill={"#44fcb6"} />
+  const groupFilter = <GroupSVG height={50} width={100} fill={!showGroup ? "#ffffffaa" : "#ff00ff"} />
+  const fastFilter = <HareSVG height={50} width={50} fill={!showFast ? "#ffffffaa" : "#ff0077"} />
+  const soloFilter = <PersonSVG height={50} width={50} fill={!showSolo ? "#ffffffaa" : "#00ffff"} />
+  const slowFilter = <TurtleSVG height={50} width={50} fill={!showSlow ? "#ffffffaa" : "#44fcb6"} />
+  const paddingRight = { paddingRight: 25 }
+
   return (
     <AnimatedScreen>
-      <Flex row centered style={{ height: 100, padding: 25 }}>
-        <TouchableOpacity onPress={() => setShowSolo(!showSolo)} style={{ paddingRight: 25 }}>
-          <PersonSVG height={50} width={50} fill={!showSolo ? "#ffffffaa" : "#00ffff"} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowGroup(!showGroup)} style={{ paddingRight: 25 }}>
-          <GroupSVG height={50} width={100} fill={!showGroup ? "#ffffffaa" : "#ff00ff"} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowFast(!showFast)} style={{ paddingRight: 25 }}>
-          <HareSVG height={50} width={50} fill={!showFast ? "#ffffffaa" : "#ff0077"} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowSlow(!showSlow)} style={{ paddingRight: 25 }}>
-          <TurtleSVG height={50} width={50} fill={!showSlow ? "#ffffffaa" : "#44fcb6"} />
-        </TouchableOpacity>
-      </Flex>
       <ScrollView style={{ flex: 1 }}>
-        <Flex row wrap centered full style={{ minHeight: 400 }}>
+        <Flex row centered style={{ height: 100, padding: 25 }}>
+          <TouchableOpacity onPress={() => setShowSolo(!showSolo)} style={paddingRight}>
+            { soloFilter }
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowGroup(!showGroup)} style={paddingRight}>
+            { groupFilter }
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowFast(!showFast)} style={paddingRight}>
+            { fastFilter }
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowSlow(!showSlow)}>
+            { slowFilter }
+          </TouchableOpacity>
+        </Flex>
+        <Flex row wrap centered full>
           {
             filteredGames.map((game) => (
               <Card
@@ -63,15 +73,11 @@ export const HomeScreen: FunctionComponent<StackScreenProps<any>> = ({
             ))
           }
         </Flex>
+        <View style={{ height: 400 }} />
       </ScrollView>
     </AnimatedScreen>
   )
 };
-
-const group = <GroupSVG height={25} width={50} fill={"#ff00ff"} />
-const fast = <HareSVG height={25} width={25} fill={"#ff0077"} />
-const solo = <PersonSVG height={25} width={25} fill={"#00ffff"} />
-const slow = <TurtleSVG height={25} width={25} fill={"#44fcb6"} />
 
 const allGames = [
   {
