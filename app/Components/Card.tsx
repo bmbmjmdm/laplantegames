@@ -27,8 +27,72 @@ export const Card: FunctionComponent<CardProps> = ({
   botName,
   hasGradient = true,
 }) => {
-  // a reference for the card's animation container, allowing us to call animation functions
-  const animationRef = useRef<AnimatedPieceFunctions>(null);
+  // TODO get the current page name from redux
+  const curStyle = { ...styles.Home, ...nonStyles.Home }
+
+  // a reference for each of the card's section's animation component
+  const containerAnimations = useRef<AnimatedPieceFunctions>(null);
+  const nameAnimations = useRef<AnimatedPieceFunctions>(null);
+  const topAnimations = useRef<AnimatedPieceFunctions>(null);
+  const botAnimations = useRef<AnimatedPieceFunctions>(null);
+
+  // a list of all animations that a card can do.
+  // when triggered, each will trigger the appropriate animations on all of the card's subcomponents
+  const shake = () => {
+    containerAnimations.current?.shake()
+    // the contents of the card shake slightly delayed to simulate reacting to the container shaking
+    setTimeout(() => {
+      nameAnimations.current?.shake()
+      topAnimations.current?.shake()
+      botAnimations.current?.shake()
+    }, 50)
+  }
+  
+  const pace = () => {
+    const left = Math.random() > 0.5
+    containerAnimations.current?.pace({left, ...curStyle.paceContainer})
+    // the contents of the card slide in the opposite direction a tiny bit to simulate drag/weight
+    setTimeout(() => {
+        nameAnimations.current?.pace({left: !left, ...curStyle.paceContents})
+        botAnimations.current?.pace({left: !left, ...curStyle.paceContents})
+        topAnimations.current?.pace({left: !left, ...curStyle.paceContents})
+    }, 300)
+  }
+  
+  const jump = () => {
+    containerAnimations.current?.jump(curStyle.jumpContainer)
+    // the contents of the card jump/fall in the opposite direction a tiny bit to simulate drag/weight
+    setTimeout(() => {
+        nameAnimations.current?.jump({inverse: true, ...curStyle.jumpContents})
+        botAnimations.current?.jump({inverse: true, ...curStyle.jumpContents})
+        topAnimations.current?.jump({inverse: true, ...curStyle.jumpContents})
+    }, 50)
+  }
+  
+  const fallOffAndRespawn = () => {
+    containerAnimations.current?.fallOffAndRespawn()
+  }
+  
+  const jumpShake = () => {
+    containerAnimations.current?.jumpShake(curStyle.jumpShakeContainer)
+    /*
+    setTimeout(() => {
+        nameAnimations.current?.jumpShake({inverse: true, distance: 1})
+        botAnimations.current?.jumpShake({inverse: true, distance: 1})
+        topAnimations.current?.jumpShake({inverse: true, distance: 1})
+    }, 75)
+    */
+  }
+  
+  const zoomOutAndBackIn = () => {
+    // the contents of the card zoom out to add a double-layer zoom effect
+    containerAnimations.current?.zoomOutAndBackIn()
+    nameAnimations.current?.zoomOutAndBackIn()
+    topAnimations.current?.zoomOutAndBackIn()
+    botAnimations.current?.zoomOutAndBackIn()
+  }
+
+  // a special property of home screen cards is they have random animations applied to them at random intervals
   const randomAnimationInterval = useRef<ReturnType<typeof setInterval> | null>(null);
   useEffect(() => {
     // TODO if we're on the Homepage, each card will use a random animation every 5-15 seconds
@@ -37,17 +101,17 @@ export const Card: FunctionComponent<CardProps> = ({
       randomAnimationInterval.current = setInterval(() => {
         // our animation options
         const animations = [
-          animationRef.current?.shake,
-          animationRef.current?.pace,
-          animationRef.current?.jump,
-          animationRef.current?.fallOffAndRespawn,
-          animationRef.current?.jumpShake,
-          animationRef.current?.zoomOutAndBackIn,
+          shake,
+          pace,
+          jump,
+          jumpShake,
+          zoomOutAndBackIn,
+          fallOffAndRespawn
         ]
         // pick one at random and do it
         animations[Math.floor(Math.random() * animations.length)]?.()
-        // wait 7.5-15 seconds
-      }, 7500 + Math.random() * 7500)
+        // wait 10-25 seconds
+      }, 10000 + Math.random() * 15000)
     }
     // clear interval on unmount
     return () => {
@@ -56,9 +120,6 @@ export const Card: FunctionComponent<CardProps> = ({
       }
     }
   }, [])
-
-  // TODO get the current page name from redux
-  const curStyle = { ...styles.Home, ...nonStyles.Home }
 
   // by default, a card has a gradient from top suit's color (or white) to the page's default color (usually black) to bottom suit's color (or white)
   // if gradient is turned off, it's just the page's default color (usually black)
@@ -83,7 +144,7 @@ export const Card: FunctionComponent<CardProps> = ({
       animationComplete={() => {}}
       startingHeight={styles.Home.container.height + styles.Home.container.padding * 2}
       startingWidth={styles.Home.container.width + styles.Home.container.padding * 2}
-      ref={animationRef}
+      ref={containerAnimations}
     >
       <TouchableOpacity activeOpacity={1} onPress={() => {}}>
         <LinearGradient
@@ -93,37 +154,61 @@ export const Card: FunctionComponent<CardProps> = ({
         >
           {name && (
             <Flex flex={3} centered>
-              <Typewriter startFull={!typed} centered>
-                <StyledText type="body">{name}</StyledText>
-              </Typewriter>
+              <AnimatedPiece
+                animationComplete={() => {}}
+                startingWidth={styles.Home.container.width - styles.Home.container.padding * 2}
+                ref={nameAnimations}
+              >
+                <Flex full>
+                  <Typewriter startFull={!typed} centered>
+                    <StyledText type="body">{name}</StyledText>
+                  </Typewriter>
+                </Flex>
+              </AnimatedPiece>
             </Flex>
           )}
           {(topSuit || topName) && (
             <Flex flex={1} centered>
-              <Flex row>
-                {topSuit}
-                {topSuit && topName && <Spacer width={10} />}
-                {
-                  topName &&
-                    <StyledText type="caption" style={{ color: topSuit?.props.fill }}>
-                      {topName}
-                  </StyledText>
-                }
-              </Flex>
+              <AnimatedPiece
+                animationComplete={() => {}}
+                startingWidth={styles.Home.container.width - styles.Home.container.padding * 2}
+                ref={topAnimations}
+              >
+                <Flex centered>
+                  <Flex row>
+                    {topSuit}
+                    {topSuit && topName && <Spacer width={10} />}
+                    {
+                      topName &&
+                        <StyledText type="caption" style={{ color: topSuit?.props.fill }}>
+                          {topName}
+                      </StyledText>
+                    }
+                  </Flex>
+                </Flex>
+              </AnimatedPiece>
             </Flex>
           )}
           {(botSuit || botName) && (
             <Flex flex={1} centered>
-              <Flex row>
-                {botSuit}
-                {botSuit && botName && <Spacer width={10} />}
-                {
-                  topName &&
-                    <StyledText type="caption" style={{ color: botSuit?.props.fill }}>
-                      {botName}
-                  </StyledText>
-                }
-              </Flex>
+              <AnimatedPiece
+                animationComplete={() => {}}
+                startingWidth={styles.Home.container.width - styles.Home.container.padding * 2}
+                ref={botAnimations}
+              >
+                <Flex centered>
+                  <Flex row>
+                    {botSuit}
+                    {botSuit && botName && <Spacer width={10} />}
+                    {
+                      topName &&
+                        <StyledText type="caption" style={{ color: botSuit?.props.fill }}>
+                          {botName}
+                      </StyledText>
+                    }
+                  </Flex>
+                </Flex>
+              </AnimatedPiece>
             </Flex>
           )}
           </LinearGradient>
@@ -136,7 +221,6 @@ export const Card: FunctionComponent<CardProps> = ({
 const styles = {
   Home: StyleSheet.create({
     container: {
-      // we use a standard playing card's ratio of 1.4:1
       height: 210,
       width: 150,
       borderRadius: 25,
@@ -153,6 +237,23 @@ const nonStyles = {
       angle: 135,
       angleCenter: { x: 0.5, y: 0.5 },
     },
-    defaultGradient: ["#000000", "#000000"]
+    defaultGradient: ["#000000", "#000000"],
+    paceContainer: {
+
+    },
+    jumpContainer: {
+
+    },
+    jumpShakeContainer: {
+
+    },
+    paceContents: {
+      // the distance the card's contents will pace in the opposite direction of the container's pace
+      distance: 10,
+    },
+    jumpContents: {
+      // the distance the card's contents will jump/fall in the opposite direction of the container's jump
+      distance: 20,
+    }
   }
 }

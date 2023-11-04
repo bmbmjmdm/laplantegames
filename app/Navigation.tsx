@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { HomeScreen } from "./Screens";
 // @ts-ignore-next-line
 import LinearGradient from "react-native-linear-gradient";
+import { Flex } from "./Components";
 
 const Stack = createStackNavigator();
 
@@ -42,24 +43,24 @@ const Navigator: FunctionComponent<{}> = () => {
   const linking = { config, prefixes: [] };
   
   return (
-    <LinearGradient
-      //colors={["#000000", "#000000", "#1a1a1a", "#3d3d3d"]}
-      //colors={["#000000", "#000000", "#aaaaaa", "#000000", "#000000"]}
-      colors={["#000000", "#000000", "#000000", "#000000"]}
-      style={{ height: "100%", overflow: "hidden" }}
-      useAngle={true}
-      angle={135}
-      angleCenter={{ x: 0.5, y: 0.5 }}
-    >
-      <NavigationContainer theme={emptyTheme} linking={linking}>
-        <Stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </LinearGradient>
+    // this background gives us the opportunity to make a layered background behind/between the gradient
+    <Flex full style={{ backgroundColor: "#000000" }}>
+      <LinearGradient
+        //colors={["#000000", "#000000", "#1a1a1a", "#3d3d3d"]}
+        //colors={["#000000", "#000000", "#aaaaaa", "#000000", "#000000"]}
+        colors={["#00000000", "#00000000", "#ffffff", "#00000000", "#00000000", "#00000000", "#00000000", "#ffffff", "#00000000"]}
+        style={{ height: "100%", overflow: "hidden" }}
+      >
+        <NavigationContainer theme={emptyTheme} linking={linking}>
+          <Stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </LinearGradient>
+    </Flex>
   );
 };
 export default App;

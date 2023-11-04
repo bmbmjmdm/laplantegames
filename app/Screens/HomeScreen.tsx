@@ -35,30 +35,32 @@ export const HomeScreen: FunctionComponent<StackScreenProps<any>> = ({
   const group = <GroupSVG height={25} width={50} fill={"#ff00ff"} />
   const fast = <HareSVG height={25} width={25} fill={"#ff0077"} />
   const solo = <PersonSVG height={25} width={25} fill={"#00ffff"} />
-  const slow = <TurtleSVG height={25} width={25} fill={"#44fcb6"} />
+  const slow = <TurtleSVG height={25} width={25} fill={"#15FEC5"} />
   const groupFilter = <GroupSVG height={50} width={100} fill={!showGroup ? "#ffffffaa" : "#ff00ff"} />
   const fastFilter = <HareSVG height={50} width={50} fill={!showFast ? "#ffffffaa" : "#ff0077"} />
   const soloFilter = <PersonSVG height={50} width={50} fill={!showSolo ? "#ffffffaa" : "#00ffff"} />
-  const slowFilter = <TurtleSVG height={50} width={50} fill={!showSlow ? "#ffffffaa" : "#44fcb6"} />
+  const slowFilter = <TurtleSVG height={50} width={50} fill={!showSlow ? "#ffffffaa" : "#15FEC5"} />
   const paddingRight = { paddingRight: 25 }
 
   return (
     <AnimatedScreen>
       <ScrollView style={{ flex: 1 }}>
-        <Flex row centered style={{ height: 100, padding: 25 }}>
-          <TouchableOpacity onPress={() => setShowSolo(!showSolo)} style={paddingRight}>
-            { soloFilter }
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setShowGroup(!showGroup)} style={paddingRight}>
-            { groupFilter }
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setShowFast(!showFast)} style={paddingRight}>
-            { fastFilter }
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setShowSlow(!showSlow)}>
-            { slowFilter }
-          </TouchableOpacity>
-        </Flex>
+        {/* removing filters for now
+          <Flex row centered style={{ height: 100, padding: 25 }}>
+            <TouchableOpacity onPress={() => setShowSolo(!showSolo)} style={paddingRight}>
+              { soloFilter }
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setShowGroup(!showGroup)} style={paddingRight}>
+              { groupFilter }
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setShowFast(!showFast)} style={paddingRight}>
+              { fastFilter }
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setShowSlow(!showSlow)}>
+              { slowFilter }
+            </TouchableOpacity>
+          </Flex>
+        */}
         <Flex row wrap centered full>
           {
             filteredGames.map((game) => (

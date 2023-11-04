@@ -106,26 +106,35 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
   }
 
   // drag the piece to a random side slowly, then drag it back
-  const pace = () => {
+  const pace = (props?:PaceProps) => {
+    const left = typeof props?.left === "boolean" ? props.left : Math.random() > 0.5
+    const distance = props?.distance || 100
+    const secondsLength = props?.secondsLength || 1000
+  
     Animated.sequence([
       Animated.timing(animatedX, {
         // pick a side and slide horizontally slowly
-        toValue: 100 * (Math.random() > 0.5 ? 1 : -1),
-        duration: 3000,
+        toValue: distance * (left ? -1 : 1),
+        duration: 3 * secondsLength,
         useNativeDriver: false,
       }),
-      Animated.delay(2000),
+      Animated.delay(2 * secondsLength),
       // slide back
       Animated.timing(animatedX, {
         toValue: 0,
-        duration: 3000,
+        duration: 3 * secondsLength,
         useNativeDriver: false,
       }),
     ]).start()
   }
 
   // fling up, starting to shake half way, then fall down, bouncing back into place (vertically and rotationally) as you land
-  const jumpShake = () => {
+  // currently the props only affect the jump portion of jumpShake
+  const jumpShake = (props?:JumpProps) => {
+      const inverse = props?.inverse
+      const distance = props?.distance || 50
+      const secondsLength = props?.secondsLength || 1000
+
     // parallel shake and jump
     Animated.parallel([
       // shake
@@ -168,15 +177,15 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
       Animated.sequence([
         // go up, decelerating
         Animated.timing(animatedY, {
-          toValue: -50,
-          duration: 500,
+          toValue: inverse ? distance : -distance,
+          duration: secondsLength * 0.5,
           easing: Easing.out(Easing.sin),
           useNativeDriver: false,
         }),
         // go down, accelerating
         Animated.timing(animatedY, {
           toValue: 0,
-          duration: 750,
+          duration: secondsLength * 0.75,
           easing: Easing.bounce,
           useNativeDriver: false,
         }),
@@ -185,19 +194,23 @@ const AnimatedPieceComponent: ForwardRefRenderFunction<AnimatedPieceFunctions, A
   }
 
   // fling a piece upwards, then drop it back down
-  const jump = () => {
+  const jump = (props?:JumpProps) => {
+    const inverse = props?.inverse
+    const distance = props?.distance || 100
+    const secondsLength = props?.secondsLength || 1000
+
     Animated.sequence([
       // go up, decelerating
       Animated.timing(animatedY, {
-        toValue: -100,
-        duration: 500,
+        toValue: inverse ? distance : -distance,
+        duration: secondsLength * 0.5,
         easing: Easing.out(Easing.sin),
         useNativeDriver: false,
       }),
       // go down, accelerating
       Animated.timing(animatedY, {
         toValue: 0,
-        duration: 750,
+        duration: secondsLength * 0.75,
         easing: Easing.bounce,
         useNativeDriver: false,
       }),
@@ -324,11 +337,23 @@ export type AnimatedPieceFunctions = {
   discard: () => void;
   shake: () => void;
   drawn: () => void;
-  pace: () => void;
-  jump: () => void;
+  pace: (props?:PaceProps) => void;
+  jump: (props?:JumpProps) => void;
   fallOffAndRespawn: () => void;
-  jumpShake: () => void;
+  jumpShake: (props?:JumpProps) => void;
   zoomOutAndBackIn: () => void;
+}
+
+type PaceProps = {
+  left?: boolean,
+  distance?: number,
+  secondsLength?: number
+}
+
+type JumpProps = {
+  inverse?: boolean,
+  distance?: number,
+  secondsLength?: number
 }
 
 export const AnimatedPiece = React.forwardRef<AnimatedPieceFunctions, AnimatedPieceProps>(AnimatedPieceComponent);
