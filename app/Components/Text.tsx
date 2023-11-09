@@ -72,7 +72,7 @@ export type TypewriterProps = TextProps & {
   // if true, will not animate in the text
   startFull?: boolean;
   // center horizontally
-  centered?: boolean
+  centered?: boolean;
 };
 export const Typewriter: FunctionComponent<TypewriterProps> = (props) => {
   const {

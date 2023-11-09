@@ -160,6 +160,12 @@ export const Card: FunctionComponent<CardProps> = ({
                 ref={nameAnimations}
               >
                 <Flex full>
+                  {/* This double-layered name text produces a text-shadow effect */}
+                  <Flex style={{position: "absolute", top:1, left: 1}} full>
+                    <Typewriter startFull={!typed} centered>
+                      <StyledText type="body" style={{color: "#000000"}}>{name}</StyledText>
+                    </Typewriter>
+                  </Flex>
                   <Typewriter startFull={!typed} centered>
                     <StyledText type="body">{name}</StyledText>
                   </Typewriter>
