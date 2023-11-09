@@ -173,12 +173,13 @@ const parseSubText = (
 const styles = {
   Home: StyleSheet.create({
     text: {
+      //color: "#4B296B",
       color: "#FFFFFF",
     },
     subscript: {
       fontSize: 14,
       paddingTop: 10,
-      color: "#AAAAAA",
+      color: "#FFFFFF",
     },
     header: {
       fontSize: 45,

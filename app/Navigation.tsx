@@ -46,9 +46,7 @@ const Navigator: FunctionComponent<{}> = () => {
     // this background gives us the opportunity to make a layered background behind/between the gradient
     <Flex full style={{ backgroundColor: "#000000" }}>
       <LinearGradient
-        //colors={["#000000", "#000000", "#1a1a1a", "#3d3d3d"]}
-        //colors={["#000000", "#000000", "#aaaaaa", "#000000", "#000000"]}
-        colors={["#00000000", "#00000000", "#ffffff", "#00000000", "#00000000", "#00000000", "#00000000", "#ffffff", "#00000000"]}
+        colors={["#FFC1DE", "#c1ffdd"]} 
         style={{ height: "100%", overflow: "hidden" }}
       >
         <NavigationContainer theme={emptyTheme} linking={linking}>

@@ -33,13 +33,13 @@ export const HomeScreen: FunctionComponent<StackScreenProps<any>> = ({
 
   // declare SVGs for cards and filters
   const group = <GroupSVG height={25} width={50} fill={"#ff00ff"} />
-  const fast = <HareSVG height={25} width={25} fill={"#ff0077"} />
-  const solo = <PersonSVG height={25} width={25} fill={"#00ffff"} />
-  const slow = <TurtleSVG height={25} width={25} fill={"#15FEC5"} />
+  const fast = <HareSVG height={25} width={25} fill={"#FF007B"} />
+  const solo = <PersonSVG height={25} width={25} fill={"#00E5DA"} />
+  const slow = <TurtleSVG height={25} width={25} fill={"#00E554"} />
   const groupFilter = <GroupSVG height={50} width={100} fill={!showGroup ? "#ffffffaa" : "#ff00ff"} />
-  const fastFilter = <HareSVG height={50} width={50} fill={!showFast ? "#ffffffaa" : "#ff0077"} />
-  const soloFilter = <PersonSVG height={50} width={50} fill={!showSolo ? "#ffffffaa" : "#00ffff"} />
-  const slowFilter = <TurtleSVG height={50} width={50} fill={!showSlow ? "#ffffffaa" : "#15FEC5"} />
+  const fastFilter = <HareSVG height={50} width={50} fill={!showFast ? "#ffffffaa" : "#FF007B"} />
+  const soloFilter = <PersonSVG height={50} width={50} fill={!showSolo ? "#ffffffaa" : "#00FFF6"} />
+  const slowFilter = <TurtleSVG height={50} width={50} fill={!showSlow ? "#ffffffaa" : "#00FF72"} />
   const paddingRight = { paddingRight: 25 }
 
   return (
@@ -71,6 +71,8 @@ export const HomeScreen: FunctionComponent<StackScreenProps<any>> = ({
                 topName={game.players}
                 botSuit={Number(game.time) > FAST ? slow : fast}
                 botName={game.time + "m"}
+                topColor={game.topColor}
+                botColor={game.botColor}
               />
             ))
           }

@@ -237,7 +237,7 @@ const nonStyles = {
       angle: 135,
       angleCenter: { x: 0.5, y: 0.5 },
     },
-    defaultGradient: ["#000000", "#000000"],
+    defaultGradient: ["#00000000", "#00000000"],
     paceContainer: {
 
     },
