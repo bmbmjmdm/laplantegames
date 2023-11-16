@@ -32,10 +32,10 @@ export const HomeScreen: FunctionComponent<StackScreenProps<any>> = ({
   )
 
   // declare SVGs for cards and filters
-  const group = <GroupSVG height={25} width={50} fill={"#ff00ff"} />
-  const fast = <HareSVG height={25} width={25} fill={"#FF007B"} />
-  const solo = <PersonSVG height={25} width={25} fill={"#00E5DA"} />
-  const slow = <TurtleSVG height={25} width={25} fill={"#00E554"} />
+  const group = <GroupSVG height={25} width={50} fill={"#CEC1FF"} />
+  const fast = <HareSVG height={25} width={25} fill={"#FFC1E0"} />
+  const solo = <PersonSVG height={25} width={25} fill={"#C1F3FF"} />
+  const slow = <TurtleSVG height={25} width={25} fill={"#C1FFC5"} />
   const groupFilter = <GroupSVG height={50} width={100} fill={!showGroup ? "#ffffffaa" : "#ff00ff"} />
   const fastFilter = <HareSVG height={50} width={50} fill={!showFast ? "#ffffffaa" : "#FF007B"} />
   const soloFilter = <PersonSVG height={50} width={50} fill={!showSolo ? "#ffffffaa" : "#00FFF6"} />

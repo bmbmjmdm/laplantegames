@@ -123,16 +123,15 @@ export const Card: FunctionComponent<CardProps> = ({
 
   // by default, a card has a gradient from top suit's color (or white) to the page's default color (usually black) to bottom suit's color (or white)
   // if gradient is turned off, it's just the page's default color (usually black)
+  const top = topSuit?.props.fill || "#ffffff"
+  const bot = botSuit?.props.fill || "#ffffff"
   const gradient = hasGradient ?
     [
-      topSuit?.props.fill || "#a1a1a1",
-      curStyle.defaultGradient[0],
-      curStyle.defaultGradient[0],
-      curStyle.defaultGradient[0],
-      curStyle.defaultGradient[0],
-      botSuit?.props.fill || "#a1a1a1"
+      top,
+      bot,
     ]
     : curStyle.defaultGradient
+
   
   const changeName = (newName:string) => {
     // cards will make these animation functions available to our parent to use based on other effects interacting with this card, the callback for this cards onPress function, etc
@@ -147,6 +146,10 @@ export const Card: FunctionComponent<CardProps> = ({
       ref={containerAnimations}
     >
       <TouchableOpacity activeOpacity={1} onPress={() => {}}>
+        <LinearGradient
+          style={{...curStyle.container, position: "absolute", top:9, left: 5}}
+          colors={[top + 99, top + 55]}
+        />
         <LinearGradient
           style={curStyle.container}
           colors={gradient}
@@ -186,9 +189,16 @@ export const Card: FunctionComponent<CardProps> = ({
                     {topSuit && topName && <Spacer width={10} />}
                     {
                       topName &&
-                        <StyledText type="caption" style={{ color: topSuit?.props.fill }}>
-                          {topName}
-                      </StyledText>
+                        <Flex>
+                          <Flex style={{position: "absolute", top:1, left: 1}} full>
+                            <StyledText type="caption" style={{ color: "#aaaaaa" }}>
+                              {topName}
+                            </StyledText>
+                          </Flex>
+                          <StyledText type="caption" style={{ color: "#ffffff" }}>
+                            {topName}
+                          </StyledText>
+                        </Flex>
                     }
                   </Flex>
                 </Flex>
@@ -208,9 +218,16 @@ export const Card: FunctionComponent<CardProps> = ({
                     {botSuit && botName && <Spacer width={10} />}
                     {
                       topName &&
-                        <StyledText type="caption" style={{ color: botSuit?.props.fill }}>
-                          {botName}
-                      </StyledText>
+                        <Flex>
+                          <Flex style={{position: "absolute", top:1, left: 1}} full>
+                            <StyledText type="caption" style={{ color: "#aaaaaa" }}>
+                              {botName}
+                            </StyledText>
+                          </Flex>
+                          <StyledText type="caption" style={{ color: "#ffffff" }}>
+                            {botName}
+                          </StyledText>
+                        </Flex>
                     }
                   </Flex>
                 </Flex>
@@ -240,10 +257,10 @@ const nonStyles = {
   Home: {
     containerGradient: {
       useAngle: true,
-      angle: 135,
+      angle: 115,
       angleCenter: { x: 0.5, y: 0.5 },
     },
-    defaultGradient: ["#00000000", "#00000000"],
+    defaultGradient: ["#000000", "#00000000"],
     paceContainer: {
 
     },

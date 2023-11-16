@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { HomeScreen } from "./Screens";
+import { HomeScreen, PoetryHomeScreen } from "./Screens";
 // @ts-ignore-next-line
 import LinearGradient from "react-native-linear-gradient";
 import { Flex } from "./Components";
@@ -38,6 +38,7 @@ const Navigator: FunctionComponent<{}> = () => {
   const config = {
     screens: {
       Home: "home",
+      PoetryHome: "poetry"
     },
   };
   const linking = { config, prefixes: [] };
@@ -46,14 +47,17 @@ const Navigator: FunctionComponent<{}> = () => {
     // this background gives us the opportunity to make a layered background behind/between the gradient
     <Flex full style={{ backgroundColor: "#000000" }}>
       <LinearGradient
-        colors={["#FFC1DE", "#c1ffdd"]} 
-        style={{ height: "100%", overflow: "hidden" }}
-      >
+        colors={["#1E2062", "#523C7A", "#6B508B", "#87659D", "#A47DB0", "#C293C3", "#FFC1E0", "#FDA1C1", "#FA6B8E"]} 
+        style={{ height: "100%", overflow: "hidden" }}>
         <NavigationContainer theme={emptyTheme} linking={linking}>
-          <Stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
+          <Stack.Navigator initialRouteName="PoetryHome" screenOptions={screenOptions}>
             <Stack.Screen
               name="Home"
               component={HomeScreen}
+            />
+            <Stack.Screen
+              name="PoetryHome"
+              component={PoetryHomeScreen}
             />
           </Stack.Navigator>
         </NavigationContainer>
