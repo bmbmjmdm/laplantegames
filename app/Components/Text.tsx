@@ -1,4 +1,4 @@
-import { Text, TextStyle, Animated, StyleSheet } from "react-native";
+import { Text, TextStyle, Animated, StyleSheet, LayoutChangeEvent } from "react-native";
 import React, {
   FunctionComponent,
   ReactNode,
@@ -7,11 +7,12 @@ import "react-native-get-random-values";
 
 export type TextProps = {
   style?: TextStyle | Animated.AnimatedProps<TextStyle>;
-  children: ReactNode;
+  children?: ReactNode;
   onPress?: () => void;
   type?: "header" | "body" | "caption" | "subscript" | "button";
   animated?: boolean;
   centered?: boolean;
+  onLayout?: (event: LayoutChangeEvent) => void;
 };
 
 // Our basic text component that integrates with our theme

@@ -1,7 +1,7 @@
 import 'react-native-get-random-values';
 import { Dimensions, ScrollView, TouchableOpacity, View, ViewStyle } from "react-native";
 import React, { FunctionComponent, useRef, useState, useEffect, ReactNode, useCallback } from "react";
-import { Flex, StyledText, } from "../Components";
+import { Flex, ScatteredText, StyledText, } from "../Components";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ZoomedCorner } from "../Components/ZoomedCorner";
 import { Distance, Quadrant, oppositeDirection } from "../Components/ScreenCoordination";
@@ -109,9 +109,21 @@ export const PoetryHomeScreen: FunctionComponent<StackScreenProps<any>> = ({
             zoomDirection={poemProperty.zoomDirection}
             quadrant={poemProperty.quadrant}
           >
-            <StyledText type="body" onPress={onPress}>
+            <ScatteredText
+              textProps={{
+                type: "body",
+                onPress
+              }}
+              scattered={poemProperty.distance !== 0}
+              avoidSpace={{
+                x: 0,
+                y: 0,
+                width: 0,
+                height: 0,
+              }}
+              >
               {poemProperty.text}
-            </StyledText>
+            </ScatteredText>
           </ZoomedCorner>
         </View>
       )
