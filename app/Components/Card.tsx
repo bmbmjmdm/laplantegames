@@ -86,12 +86,15 @@ export const Card: FunctionComponent<CardProps> = ({
   }
   
   const zoomOutAndBackIn = () => {
-    // the contents of the card zoom out to add a double-layer zoom effect
     containerAnimations.current?.zoomOutAndBackIn()
+    // the contents of the card zoom out to add a double-layer zoom effect
     nameAnimations.current?.zoomOutAndBackIn()
     topAnimations.current?.zoomOutAndBackIn()
     botAnimations.current?.zoomOutAndBackIn()
   }
+
+  // these animations are made available to our parent component to call at will
+  // TODO
 
   // a special property of home screen cards is they have random animations applied to them at random intervals
   const randomAnimationInterval = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -132,12 +135,6 @@ export const Card: FunctionComponent<CardProps> = ({
       bot,
     ]
     : curStyle.defaultGradient
-
-  
-  const changeName = (newName:string) => {
-    // cards will make these animation functions available to our parent to use based on other effects interacting with this card, the callback for this cards onPress function, etc
-    // when one is triggered, it run its animations directly on the card & subcomponents or called through AnimatedPiece
-  }
 
   return (
     <AnimatedPiece
