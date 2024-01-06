@@ -50,7 +50,7 @@ const Navigator: FunctionComponent<{}> = () => {
         colors={["#1E2062", "#523C7A", "#6B508B", "#87659D", "#A47DB0", "#C293C3", "#FFC1E0", "#FDA1C1", "#FA6B8E"]} 
         style={{ height: "100%", overflow: "hidden" }}>
         <NavigationContainer theme={emptyTheme} linking={linking}>
-          <Stack.Navigator initialRouteName="PoetryHome" screenOptions={screenOptions}>
+          <Stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
             <Stack.Screen
               name="Home"
               component={HomeScreen}
