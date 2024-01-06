@@ -1,7 +1,8 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 import React, { FunctionComponent, ReactElement, useEffect, useImperativeHandle, useRef } from "react";
 import { Flex } from "./Layout";
-import { StyledText, Typewriter } from "./Text";
+import { StyledText } from "./Text";
+import { Typewriter } from "./TypeWriter"
 import { AnimatedPiece, AnimatedPieceFunctions } from "./AnimatedPiece";
 import { Spacer } from "./Spacer";
 import LinearGradient from "react-native-linear-gradient";
