@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import React, { FunctionComponent, ReactElement, useEffect, useImperativeHandle, useRef } from "react";
 import { Flex } from "./Layout";
 import { StyledText } from "./Text";
@@ -137,8 +137,8 @@ export const Card: FunctionComponent<CardProps> = ({
 
   // by default, a card has a gradient from top suit's color (or white) to the page's default color (usually black) to bottom suit's color (or white)
   // if gradient is turned off, it's just the page's default color (usually black)
-  const top = firstSuit?.props.fill || "#ffffff"
-  const bot = secondSuit?.props.fill || firstSuit?.props.fill || "#ffffff"
+  const firstColor = firstSuit?.props.fill || "#ffffff"
+  const secondColor = secondSuit?.props.fill || firstSuit?.props.fill || "#ffffff"
 
   
   // here are all the parts of our rendered card, assembled at the bottom in the return statement
@@ -154,49 +154,59 @@ export const Card: FunctionComponent<CardProps> = ({
     </AnimatedPiece>
   )
   
-  const CardBackground = (props: NodeProps)  => (
-    <>
-      <View style={[curStyle.container, {position: "absolute", justifyContent: "center"}]}>
-        <LinearGradient
-          style={[curStyle.verticalSideLine, {position: "absolute", left: 0}]}
-          colors={[top, bot]}
-        />
-        <LinearGradient
-          style={[curStyle.verticalSideLine, {position: "absolute", right: 0}]}
-          colors={[top, bot]}
-        />
-      </View>
-      <View style={[curStyle.container, {position: "absolute", alignItems: "center"}]}>
-        <View
-          style={[curStyle.horizontalSideLine, {
-            position: "absolute",
-            bottom: 0,
-            backgroundColor: bot
-          }]}
-        />
-        <View
-          style={[curStyle.horizontalSideLine, {
-            position: "absolute",
-            top: 0,
-            backgroundColor: top
-          }]}
-        />
-      </View>
-      <View style={[curStyle.container, {position: "absolute"}]}>
-        <View style={{position: "absolute", top: -firstSuit?.props.height/4, left: -firstSuit?.props.width/4, transform: [{rotate: "-15deg"}]}}>
-          { firstSuit }
+  const CardBackground = (props: NodeProps)  => {
+    // we make 4 containers here:
+    // 1. an absolutely positioned, container-size view for the vertical side lines
+    // 2. an absolutely positioned, container-size view for the horizontal side line
+    // 3. an absolutely positioned, container-size view for the suits in the top corners
+    // 4. a normal container for the card's contents
+    const lineColor = "#DADADA"
+    const transparent = "#00000000"
+    const absolute:ViewStyle = {position: "absolute"}
+    return (
+      <>
+        <View style={[curStyle.container, absolute, {justifyContent: "center"}]}>
+          <LinearGradient
+            style={[curStyle.verticalSideLine, absolute, {left: 0}]}
+            colors={[lineColor, transparent]}
+          />
+          <LinearGradient
+            style={[curStyle.verticalSideLine, absolute, {right: 0}]}
+            colors={[lineColor, transparent]}
+          />
         </View>
-        <View style={{position: "absolute", top: -firstSuit?.props.height/4, right: -firstSuit?.props.width/4, transform: [{rotate: "15deg"}] }}>
-          { secondSuit }
+        <View style={[curStyle.container, absolute, {alignItems: "center"}]}>
+          <View
+            style={[curStyle.horizontalSideLine, absolute, {
+              top: 0,
+              backgroundColor: lineColor
+            }]}
+          />
         </View>
-      </View>
-      <View
-        style={curStyle.container}
-      >
-        {props.children}
-      </View>
-    </>
-  )
+        <View style={[curStyle.container, absolute]}>
+          <View style={[absolute, {
+            top: -firstSuit?.props.height/3,
+            left: -firstSuit?.props.width/3,
+            transform: [{rotate: "-15deg"}]
+          }]}>
+            { firstSuit }
+          </View>
+          <View style={[absolute, {
+            top: -secondSuit?.props.height/3,
+            right: -secondSuit?.props.width/3,
+            transform: [{rotate: "15deg"}]
+          }]}>
+            { secondSuit }
+          </View>
+        </View>
+        <View
+          style={curStyle.container}
+        >
+          {props.children}
+        </View>
+      </>
+    )
+  }
 
   const AnimatedNameContainer = (props:NodeProps) => (
     <Flex flex={2} centered>
@@ -261,7 +271,7 @@ export const Card: FunctionComponent<CardProps> = ({
       {
         firstDetail &&
           <Flex>
-            <StyledText type="caption" style={{ color: top }}>
+            <StyledText type="caption" style={{ color: firstColor }}>
               {firstDetail}
             </StyledText>
           </Flex>
@@ -289,7 +299,7 @@ export const Card: FunctionComponent<CardProps> = ({
       {
         secondDetail &&
           <Flex>
-            <StyledText type="caption" style={{ color: bot }}>
+            <StyledText type="caption" style={{ color: secondColor }}>
               {secondDetail}
             </StyledText>
           </Flex>
