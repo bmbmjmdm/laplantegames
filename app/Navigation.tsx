@@ -46,9 +46,9 @@ const Navigator: FunctionComponent<{}> = () => {
   return (
     // this background gives us the opportunity to make a layered background behind/between the gradient
     <Flex full style={{ backgroundColor: "#000000" }}>
-      <LinearGradient
+      {/*<LinearGradient
         colors={["#1E2062", "#523C7A", "#6B508B", "#87659D", "#A47DB0", "#C293C3", "#FFC1E0", "#FDA1C1", "#FA6B8E"]} 
-        style={{ height: "100%", overflow: "hidden" }}>
+        style={{ height: "100%", overflow: "hidden" }}>*/}
         <NavigationContainer theme={emptyTheme} linking={linking}>
           <Stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
             <Stack.Screen
@@ -61,7 +61,7 @@ const Navigator: FunctionComponent<{}> = () => {
             />
           </Stack.Navigator>
         </NavigationContainer>
-      </LinearGradient>
+      {/*</LinearGradient>*/}
     </Flex>
   );
 };

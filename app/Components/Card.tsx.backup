@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import React, { FunctionComponent, ReactElement, useEffect, useImperativeHandle, useRef } from "react";
 import { Flex } from "./Layout";
 import { StyledText } from "./Text";
@@ -14,32 +14,30 @@ type NodeProps = {children?:React.ReactNode}
 type CardProps = {
   name?: string;
   typed?: boolean;
-  firstSuit?: ReactElement;
-  description?: string;
-  secondSuit?: ReactElement;
+  topSuit?: ReactElement;
+  topName?: string;
+  botSuit?: ReactElement;
+  botName?: string;
+  hasGradient?: boolean;
   onPress?: () => void;
-  firstDetail?: string;
-  secondDetail?: string;
 };
 
 export const Card: FunctionComponent<CardProps> = ({
   name,
   typed = false,
-  firstSuit,
-  description,
-  secondSuit,
-  firstDetail,
-  secondDetail,
+  topSuit,
+  topName,
+  botSuit,
+  botName,
+  hasGradient = true,
   onPress
 }) => {
   // TODO get the current page name from redux
-  const pageName = "Home"
-  const curStyle = { ...styles[pageName], ...nonStyles[pageName] }
+  const curStyle = { ...styles.Home, ...nonStyles.Home }
 
   // a reference for each of the card's section's animation component
   const containerAnimations = useRef<AnimatedPieceFunctions>(null);
   const nameAnimations = useRef<AnimatedPieceFunctions>(null);
-  const descriptionAnimations = useRef<AnimatedPieceFunctions>(null);
   const topAnimations = useRef<AnimatedPieceFunctions>(null);
   const botAnimations = useRef<AnimatedPieceFunctions>(null);
 
@@ -49,8 +47,7 @@ export const Card: FunctionComponent<CardProps> = ({
     containerAnimations.current?.shake()
     // the contents of the card shake slightly delayed to simulate reacting to the container shaking
     setTimeout(() => {
-      //nameAnimations.current?.shake()
-      //descriptionAnimations.current?.shake()
+      nameAnimations.current?.shake()
       topAnimations.current?.shake()
       botAnimations.current?.shake()
     }, 50)
@@ -61,10 +58,9 @@ export const Card: FunctionComponent<CardProps> = ({
     containerAnimations.current?.pace({left, ...curStyle.paceContainer})
     // the contents of the card slide in the opposite direction a tiny bit to simulate drag/weight
     setTimeout(() => {
-        //nameAnimations.current?.pace({left: !left, ...curStyle.paceContents})
-        //descriptionAnimations.current?.pace({left: !left, ...curStyle.paceContents})
-        topAnimations.current?.pace({left: !left, ...curStyle.paceContents})
+        nameAnimations.current?.pace({left: !left, ...curStyle.paceContents})
         botAnimations.current?.pace({left: !left, ...curStyle.paceContents})
+        topAnimations.current?.pace({left: !left, ...curStyle.paceContents})
     }, 300)
   }
   
@@ -72,10 +68,9 @@ export const Card: FunctionComponent<CardProps> = ({
     containerAnimations.current?.jump(curStyle.jumpContainer)
     // the contents of the card jump/fall in the opposite direction a tiny bit to simulate drag/weight
     setTimeout(() => {
-        //nameAnimations.current?.jump({inverse: true, ...curStyle.jumpContents})
-        //descriptionAnimations.current?.jump({inverse: true, ...curStyle.jumpContents})
-        topAnimations.current?.jump({inverse: true, ...curStyle.jumpContents})
+        nameAnimations.current?.jump({inverse: true, ...curStyle.jumpContents})
         botAnimations.current?.jump({inverse: true, ...curStyle.jumpContents})
+        topAnimations.current?.jump({inverse: true, ...curStyle.jumpContents})
     }, 50)
   }
   
@@ -97,8 +92,7 @@ export const Card: FunctionComponent<CardProps> = ({
   const zoomOutAndBackIn = () => {
     containerAnimations.current?.zoomOutAndBackIn()
     // the contents of the card zoom out to add a double-layer zoom effect
-    //nameAnimations.current?.zoomOutAndBackIn()
-    //descriptionAnimations.current?.zoomOutAndBackIn()
+    nameAnimations.current?.zoomOutAndBackIn()
     topAnimations.current?.zoomOutAndBackIn()
     botAnimations.current?.zoomOutAndBackIn()
   }
@@ -137,8 +131,14 @@ export const Card: FunctionComponent<CardProps> = ({
 
   // by default, a card has a gradient from top suit's color (or white) to the page's default color (usually black) to bottom suit's color (or white)
   // if gradient is turned off, it's just the page's default color (usually black)
-  const top = firstSuit?.props.fill || "#ffffff"
-  const bot = secondSuit?.props.fill || firstSuit?.props.fill || "#ffffff"
+  const top = topSuit?.props.fill || "#ffffff"
+  const bot = botSuit?.props.fill || "#ffffff"
+  const gradient = hasGradient ?
+    [
+      top,
+      bot,
+    ]
+    : curStyle.defaultGradient
 
   
   // here are all the parts of our rendered card, assembled at the bottom in the return statement
@@ -156,50 +156,22 @@ export const Card: FunctionComponent<CardProps> = ({
   
   const CardBackground = (props: NodeProps)  => (
     <>
-      <View style={[curStyle.container, {position: "absolute", justifyContent: "center"}]}>
-        <LinearGradient
-          style={[curStyle.verticalSideLine, {position: "absolute", left: 0}]}
-          colors={[top, bot]}
-        />
-        <LinearGradient
-          style={[curStyle.verticalSideLine, {position: "absolute", right: 0}]}
-          colors={[top, bot]}
-        />
-      </View>
-      <View style={[curStyle.container, {position: "absolute", alignItems: "center"}]}>
-        <View
-          style={[curStyle.horizontalSideLine, {
-            position: "absolute",
-            bottom: 0,
-            backgroundColor: bot
-          }]}
-        />
-        <View
-          style={[curStyle.horizontalSideLine, {
-            position: "absolute",
-            top: 0,
-            backgroundColor: top
-          }]}
-        />
-      </View>
-      <View style={[curStyle.container, {position: "absolute"}]}>
-        <View style={{position: "absolute", top: -firstSuit?.props.height/4, left: -firstSuit?.props.width/4, transform: [{rotate: "-15deg"}]}}>
-          { firstSuit }
-        </View>
-        <View style={{position: "absolute", top: -firstSuit?.props.height/4, right: -firstSuit?.props.width/4, transform: [{rotate: "15deg"}] }}>
-          { secondSuit }
-        </View>
-      </View>
-      <View
+      <LinearGradient
+        style={{...curStyle.container, position: "absolute", top:9, left: 5}}
+        colors={[top + 99, top + 55]}
+      />
+      <LinearGradient
         style={curStyle.container}
+        colors={gradient}
+        {...curStyle.containerGradient}
       >
         {props.children}
-      </View>
+      </LinearGradient>
     </>
   )
 
   const AnimatedNameContainer = (props:NodeProps) => (
-    <Flex flex={2} centered>
+    <Flex flex={3} centered>
       <AnimatedPiece
         startingWidth={styles.Home.container.width - styles.Home.container.padding * 2}
         ref={nameAnimations}
@@ -213,35 +185,19 @@ export const Card: FunctionComponent<CardProps> = ({
 
   const CardName = (props: NodeProps) => (
     <>
+      {/* This double-layered name text produces a text-shadow effect */}
+      <Flex style={{position: "absolute", top:1, left: 1}} full>
+        <Typewriter startFull={!typed} centered>
+          <StyledText type="body" style={{color: "#000000"}}>{name}</StyledText>
+        </Typewriter>
+      </Flex>
       <Typewriter startFull={!typed} centered>
         <StyledText type="body">{name}</StyledText>
       </Typewriter>
     </>
   )
 
-  const AnimatedDescriptionContainer = (props: NodeProps) => (
-    <Flex flex={2} centered>
-      <AnimatedPiece
-        startingWidth={styles.Home.container.width - styles.Home.container.padding * 2}
-        ref={descriptionAnimations}
-      >
-        <Flex full>
-          {props.children}
-        </Flex>
-      </AnimatedPiece>
-    </Flex>
-  )
-
-  const CardDescription = (props: NodeProps) => (
-    <>
-      <Typewriter startFull={!typed} centered>
-        <StyledText type="caption">{description}</StyledText>
-      </Typewriter>
-    </>
-  )
-
-  
-  const AnimatedFirstDetailContainer = (props: NodeProps) => (
+  const AnimatedTopContainer = (props: NodeProps) => (
     <Flex flex={1} centered>
       <AnimatedPiece
         startingWidth={styles.Home.container.width - styles.Home.container.padding * 2}
@@ -256,20 +212,27 @@ export const Card: FunctionComponent<CardProps> = ({
     </Flex>
   )
 
-  const CardFirstDetail = (props: NodeProps) => (
+  const CardTop = (props: NodeProps) => (
     <>
+      {topSuit}
+      {topSuit && topName && <Spacer width={10} />}
       {
-        firstDetail &&
+        topName &&
           <Flex>
-            <StyledText type="caption" style={{ color: top }}>
-              {firstDetail}
+            <Flex style={{position: "absolute", top:1, left: 1}} full>
+              <StyledText type="caption" style={{ color: "#aaaaaa" }}>
+                {topName}
+              </StyledText>
+            </Flex>
+            <StyledText type="caption" style={{ color: "#ffffff" }}>
+              {topName}
             </StyledText>
           </Flex>
       }
     </>
   )
 
-  const AnimatedSecondDetailContainer = (props: NodeProps) => (
+  const AnimatedBottomContainer = (props: NodeProps) => (
     <Flex flex={1} centered>
       <AnimatedPiece
         startingWidth={styles.Home.container.width - styles.Home.container.padding * 2}
@@ -284,13 +247,20 @@ export const Card: FunctionComponent<CardProps> = ({
     </Flex>
   )
 
-  const CardSecondDetail = (props: NodeProps) => (
+  const CardBottom = (props: NodeProps) => (
     <>
+      {botSuit}
+      {botSuit && botName && <Spacer width={10} />}
       {
-        secondDetail &&
+        topName &&
           <Flex>
-            <StyledText type="caption" style={{ color: bot }}>
-              {secondDetail}
+            <Flex style={{position: "absolute", top:1, left: 1}} full>
+              <StyledText type="caption" style={{ color: "#aaaaaa" }}>
+                {botName}
+              </StyledText>
+            </Flex>
+            <StyledText type="caption" style={{ color: "#ffffff" }}>
+              {botName}
             </StyledText>
           </Flex>
       }
@@ -307,20 +277,15 @@ export const Card: FunctionComponent<CardProps> = ({
               <CardName />
             </AnimatedNameContainer>
           }
-          {firstDetail && (
-            <AnimatedFirstDetailContainer>
-              <CardFirstDetail />
-            </AnimatedFirstDetailContainer>
+          {(topSuit || topName) && (
+            <AnimatedTopContainer>
+              <CardTop />
+            </AnimatedTopContainer>
           )}
-          {secondDetail && (
-            <AnimatedSecondDetailContainer>
-              <CardSecondDetail />
-            </AnimatedSecondDetailContainer>
-          )}
-          {description && (
-            <AnimatedDescriptionContainer>
-              <CardDescription />
-            </AnimatedDescriptionContainer>
+          {(botSuit || botName) && (
+            <AnimatedBottomContainer>
+              <CardBottom />
+            </AnimatedBottomContainer>
           )}
         </CardBackground>
       </TouchableOpacity>
@@ -337,14 +302,6 @@ const styles = {
       borderRadius: 25,
       margin: 20,
       padding: 20,
-    },
-    verticalSideLine: {
-      height: 100,
-      width: 4,
-    },
-    horizontalSideLine: {
-      height: 4,
-      width: 70,
     },
   })
 }
